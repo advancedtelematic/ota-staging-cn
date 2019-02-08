@@ -29,6 +29,30 @@ let bucket : Types.S3_Bucket =
   }
 }
 
+let privateSubnets : List Types.AWS_Subnet =
+[ { mapKey = "private-${region}a"
+  , mapValue =
+    { vpc_id = "\${aws_vpc.${environmentName}.id}"
+    , cidr_block = "10.100.1.0/24"
+    , availability_zone = "${region}a"
+    }
+  }
+, { mapKey = "private-${region}b"
+  , mapValue =
+    { vpc_id = "\${aws_vpc.${environmentName}.id}"
+    , cidr_block = "10.100.3.0/24"
+    , availability_zone = "${region}b"
+    }
+  }
+, { mapKey = "private-${region}c"
+  , mapValue =
+    { vpc_id = "\${aws_vpc.${environmentName}.id}"
+    , cidr_block = "10.100.5.0/24"
+    , availability_zone = "${region}c"
+    }
+  }
+]
+
 in
 { provider = [provider]
 , terraform =
@@ -42,5 +66,7 @@ in
   }
 , resource =
   { aws_vpc = [vpc]
-  , aws_s3_bucket = [bucket] }
+  , aws_s3_bucket = [bucket]
+  , aws_subnet = privateSubnets
+  }
 }
