@@ -1,0 +1,33 @@
+{
+  "provider": {
+    "aws": {
+      "access_key": "${var.aws_access_key}",
+      "region": "cn-northwest-1",
+      "secret_key": "${var.aws_secret_key}"
+    }
+  },
+  "resource": {
+    "aws_s3_bucket": {
+      "ota-china-test-bucket": {
+        "acl": "private",
+        "bucket": "ota-china-test-bucket"
+      }
+    },
+    "aws_vpc": {
+      "staging-cn": {
+        "cidr_block": "10.100.0.0/16",
+        "enable_dns_hostnames": true,
+        "enable_dns_support": true
+      }
+    }
+  },
+  "terraform": {
+    "backend": {
+      "s3": {
+        "bucket": "ota-china-state-store",
+        "key": "terraform/",
+        "region": "cn-northwest-1"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+docker pull hashicorp/terraform:light
+docker run --rm \
+           -v $(pwd):/data \
+           -v $(pwd)/keys:/tmp/keys \
+           --workdir=/data \
+           hashicorp/terraform:light "$@"
