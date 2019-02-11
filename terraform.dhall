@@ -31,28 +31,54 @@ let bucket : Types.S3_Bucket =
 }
 
 let privateSubnetNames =
-[ { name = "a"
+[ { zone = "a"
   , range = "1"
   }
-, { name = "b"
+, { zone = "b"
   , range = "3"
   }
-, { name = "c"
+, { zone = "c"
   , range = "5"
   }
 ]
 
-let createPrivateSubnet =
-\(subnet: { name : Text, range : Text }) ->
-{ mapKey = "private-${region}${subnet.name}"
+let publicSubnetNames =
+[ { zone = "a"
+  , range = "0"
+  }
+, { zone = "b"
+  , range = "2"
+  }
+, { zone = "c"
+  , range = "4"
+  }
+]
+
+let createSubnet =
+\(name : Text) -> \(subnet : { zone : Text, range : Text }) ->
+{ mapKey = "${name}-${region}${subnet.zone}"
 , mapValue =
   { vpc_id = "\${aws_vpc.${environmentName}.id}"
   , cidr_block = "10.100.${subnet.range}.0/24"
-  , availability_zone = "${region}${subnet.name}"
+  , availability_zone = "${region}${subnet.zone}"
   }
-}
+} : Types.AWS_Subnet
 
-let privateSubnets = map { name : Text, range : Text } Types.AWS_Subnet createPrivateSubnet privateSubnetNames
+let createPrivateSubnet = createSubnet "private"
+let createPublicSubnet = createSubnet "public"
+let privateSubnets = map { zone : Text, range : Text } Types.AWS_Subnet createPrivateSubnet privateSubnetNames
+let publicSubnets = map { zone : Text, range : Text } Types.AWS_Subnet createPublicSubnet publicSubnetNames
+
+let internetGateway : Types.AWS_Internet_Gateway =
+{ vpc_id = "\${aws_vpc.${environmentName}.id}" }
+
+let createEip =
+\(name : Text) ->
+{ mapKey = "nat-${name}"
+, mapValue = { vpc = True }
+} : Types.AWS_Eip
+
+let eips = map Text Types.AWS_Eip createEip [ "a", "b", "c" ]
 
 in
 { provider = [provider]
@@ -68,6 +94,7 @@ in
 , resource =
   { aws_vpc = [vpc]
   , aws_s3_bucket = [bucket]
-  , aws_subnet = privateSubnets
+  , aws_subnet = privateSubnets # publicSubnets
+  , aws_eip = eips
   }
 }

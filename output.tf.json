@@ -7,6 +7,17 @@
     }
   },
   "resource": {
+    "aws_eip": {
+      "nat-a": {
+        "vpc": true
+      },
+      "nat-b": {
+        "vpc": true
+      },
+      "nat-c": {
+        "vpc": true
+      }
+    },
     "aws_s3_bucket": {
       "ota-china-test-bucket": {
         "acl": "private",
@@ -27,6 +38,21 @@
       "private-cn-northwest-1c": {
         "availability_zone": "cn-northwest-1c",
         "cidr_block": "10.100.5.0/24",
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      },
+      "public-cn-northwest-1a": {
+        "availability_zone": "cn-northwest-1a",
+        "cidr_block": "10.100.0.0/24",
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      },
+      "public-cn-northwest-1b": {
+        "availability_zone": "cn-northwest-1b",
+        "cidr_block": "10.100.2.0/24",
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      },
+      "public-cn-northwest-1c": {
+        "availability_zone": "cn-northwest-1c",
+        "cidr_block": "10.100.4.0/24",
         "vpc_id": "${aws_vpc.staging-cn.id}"
       }
     },
