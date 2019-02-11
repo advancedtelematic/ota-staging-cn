@@ -24,20 +24,41 @@
       }
     },
     "aws_nat_gateway": {
-      "nat-a": {
+      "nat-gw-a": {
         "allocation_id": "${aws_eip.nat-a.id}",
         "subnet_id": "${aws_subnet.public-cn-northwest-1a.id}"
       },
-      "nat-b": {
+      "nat-gw-b": {
         "allocation_id": "${aws_eip.nat-b.id}",
         "subnet_id": "${aws_subnet.public-cn-northwest-1b.id}"
       },
-      "nat-c": {
+      "nat-gw-c": {
         "allocation_id": "${aws_eip.nat-c.id}",
         "subnet_id": "${aws_subnet.public-cn-northwest-1c.id}"
       }
     },
     "aws_route_table": {
+      "private-cn-northwest-1a": {
+        "route": {
+          "cidr_block": "0.0.0.0/0",
+          "nat_gateway_id": "${aws_nat_gateway.nat-gw-a.id}"
+        },
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      },
+      "private-cn-northwest-1b": {
+        "route": {
+          "cidr_block": "0.0.0.0/0",
+          "nat_gateway_id": "${aws_nat_gateway.nat-gw-b.id}"
+        },
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      },
+      "private-cn-northwest-1c": {
+        "route": {
+          "cidr_block": "0.0.0.0/0",
+          "nat_gateway_id": "${aws_nat_gateway.nat-gw-c.id}"
+        },
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      },
       "public-cn-northwest-1": {
         "route": {
           "cidr_block": "0.0.0.0/0",

@@ -84,7 +84,7 @@ let eips = map Text Types.AWS_Eip createEip zones
 
 let createNatGateway =
 \(zone : Text) ->
-{ mapKey = "nat-${zone}"
+{ mapKey = "nat-gw-${zone}"
 , mapValue =
   { allocation_id = "\${aws_eip.nat-${zone}.id}"
   , subnet_id = "\${aws_subnet.public-${region}${zone}.id}"
@@ -104,6 +104,21 @@ let publicRouteTable : Types.AWS_Route_Table =
   }
 }
 
+let createPrivateRouteTable =
+\(zone : Text) ->
+{ mapKey = "private-${region}${zone}"
+, mapValue =
+  { vpc_id = "\${aws_vpc.${environmentName}.id}"
+  , route =
+    { cidr_block = "0.0.0.0/0"
+    , gateway_id = None Text
+    , nat_gateway_id = Some "\${aws_nat_gateway.nat-gw-${zone}.id}"
+    }
+  }
+} : Types.AWS_Route_Table
+
+let privateRouteTables = map Text Types.AWS_Route_Table createPrivateRouteTable zones
+
 in
 { provider = [provider]
 , terraform =
@@ -122,6 +137,6 @@ in
   , aws_eip = eips
   , aws_nat_gateway = natGateways
   , aws_internet_gateway = [internetGateway]
-  , aws_route_table = [publicRouteTable]
+  , aws_route_table = [publicRouteTable] # privateRouteTables
   }
 }
