@@ -1,3 +1,4 @@
+let map = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d03b3ea760a96a8e03935f4baa64274e1/Prelude/List/map
 let Types = ./dhall/types.dhall
 
 let region = "cn-northwest-1"
@@ -29,29 +30,29 @@ let bucket : Types.S3_Bucket =
   }
 }
 
-let privateSubnets : List Types.AWS_Subnet =
-[ { mapKey = "private-${region}a"
-  , mapValue =
-    { vpc_id = "\${aws_vpc.${environmentName}.id}"
-    , cidr_block = "10.100.1.0/24"
-    , availability_zone = "${region}a"
-    }
+let privateSubnetNames =
+[ { name = "a"
+  , range = "1"
   }
-, { mapKey = "private-${region}b"
-  , mapValue =
-    { vpc_id = "\${aws_vpc.${environmentName}.id}"
-    , cidr_block = "10.100.3.0/24"
-    , availability_zone = "${region}b"
-    }
+, { name = "b"
+  , range = "3"
   }
-, { mapKey = "private-${region}c"
-  , mapValue =
-    { vpc_id = "\${aws_vpc.${environmentName}.id}"
-    , cidr_block = "10.100.5.0/24"
-    , availability_zone = "${region}c"
-    }
+, { name = "c"
+  , range = "5"
   }
 ]
+
+let createPrivateSubnet =
+\(subnet: { name : Text, range : Text }) ->
+{ mapKey = "private-${region}${subnet.name}"
+, mapValue =
+  { vpc_id = "\${aws_vpc.${environmentName}.id}"
+  , cidr_block = "10.100.${subnet.range}.0/24"
+  , availability_zone = "${region}${subnet.name}"
+  }
+}
+
+let privateSubnets = map { name : Text, range : Text } Types.AWS_Subnet createPrivateSubnet privateSubnetNames
 
 in
 { provider = [provider]
