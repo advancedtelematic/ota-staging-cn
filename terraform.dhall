@@ -5,8 +5,6 @@ let region = "cn-northwest-1"
 let zones = ["a", "b", "c"]
 let environmentName = "staging-cn"
 
-let Visibility = < Public = "public" | Private = "private" >
-
 let provider : Types.Provider =
 { mapKey = "aws"
 , mapValue =
@@ -162,5 +160,5 @@ in
   , aws_internet_gateway = [internetGateway]
   , aws_route_table = privateRouteTables # [publicRouteTable]
   , aws_route_table_association = privateRouteTableAssociations # publicRouteTableAssociations
-  }
+  } /\ ./security-groups.dhall
 }

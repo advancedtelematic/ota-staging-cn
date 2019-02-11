@@ -99,6 +99,72 @@
         "bucket": "ota-china-test-bucket"
       }
     },
+    "aws_security_group": {
+      "private": {
+        "description": "[TF] only access from the vpc to instances in the private subnet",
+        "egress": [
+          {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "from_port": 0,
+            "protocol": "-1",
+            "to_port": 0
+          }
+        ],
+        "ingress": [
+          {
+            "cidr_blocks": [
+              "${aws_vpc.staging-cn.cidr_block}"
+            ],
+            "from_port": 0,
+            "protocol": "-1",
+            "to_port": 0
+          }
+        ],
+        "name": "private"
+      },
+      "public": {
+        "description": "[TF] Allow http traffic",
+        "egress": [
+          {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "from_port": 0,
+            "protocol": "-1",
+            "to_port": 0
+          }
+        ],
+        "ingress": [
+          {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "from_port": 80,
+            "protocol": "tcp",
+            "to_port": 80
+          },
+          {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "from_port": 443,
+            "protocol": "tcp",
+            "to_port": 443
+          },
+          {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "from_port": 8000,
+            "protocol": "tcp",
+            "to_port": 8000
+          }
+        ],
+        "name": "public"
+      }
+    },
     "aws_subnet": {
       "private-cn-northwest-1a": {
         "availability_zone": "cn-northwest-1a",
