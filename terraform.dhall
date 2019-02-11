@@ -2,6 +2,7 @@ let map = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d03b3ea
 let Types = ./dhall/types.dhall
 
 let region = "cn-northwest-1"
+let zones = ["a", "b", "c"]
 let environmentName = "staging-cn"
 
 let provider : Types.Provider =
@@ -28,6 +29,11 @@ let bucket : Types.S3_Bucket =
   { bucket = "ota-china-test-bucket"
   , acl = "private"
   }
+}
+
+let internetGateway : Types.AWS_Internet_Gateway =
+{ mapKey = "staging-cn"
+, mapValue = { vpc_id = "\${aws_vpc.${environmentName}.id}" }
 }
 
 let privateSubnetNames =
@@ -69,16 +75,22 @@ let createPublicSubnet = createSubnet "public"
 let privateSubnets = map { zone : Text, range : Text } Types.AWS_Subnet createPrivateSubnet privateSubnetNames
 let publicSubnets = map { zone : Text, range : Text } Types.AWS_Subnet createPublicSubnet publicSubnetNames
 
-let internetGateway : Types.AWS_Internet_Gateway =
-{ vpc_id = "\${aws_vpc.${environmentName}.id}" }
-
 let createEip =
-\(name : Text) ->
-{ mapKey = "nat-${name}"
+\(zone : Text) ->
+{ mapKey = "nat-${zone}"
 , mapValue = { vpc = True }
 } : Types.AWS_Eip
+let eips = map Text Types.AWS_Eip createEip zones
 
-let eips = map Text Types.AWS_Eip createEip [ "a", "b", "c" ]
+let createNatGateway =
+\(zone : Text) ->
+{ mapKey = "nat-${zone}"
+, mapValue =
+  { allocation_id = "\${aws_eip.nat-${zone}.id}"
+  , subnet_id = "\${aws_subnet.public-${region}${zone}.id}"
+  }
+} : Types.AWS_Nat_Gateway
+let natGateways = map Text Types.AWS_Nat_Gateway createNatGateway zones
 
 in
 { provider = [provider]
@@ -96,5 +108,7 @@ in
   , aws_s3_bucket = [bucket]
   , aws_subnet = privateSubnets # publicSubnets
   , aws_eip = eips
+  , aws_nat_gateway = natGateways
+  , aws_internet_gateway = [internetGateway]
   }
 }

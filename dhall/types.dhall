@@ -1,5 +1,7 @@
 let AWS_Internet_Gateway =
-{ vpc_id : Text }
+{ mapKey : Text
+, mapValue : { vpc_id : Text }
+}
 
 let AWS_Route_Table =
 { vpc_id : Text
@@ -26,8 +28,11 @@ let AWS_Eip =
 }
 
 let AWS_Nat_Gateway =
-{ allocation_id : Text
-, subnet_id : Text
+{ mapKey : Text
+, mapValue :
+  { allocation_id : Text
+  , subnet_id : Text
+  }
 }
 
 let S3_Bucket =
@@ -44,6 +49,7 @@ in
 , AWS_Eip = AWS_Eip
 , AWS_Internet_Gateway = AWS_Internet_Gateway
 , AWS_Route_Table = AWS_Route_Table
+, AWS_Nat_Gateway = AWS_Nat_Gateway
 , S3_Bucket = S3_Bucket
 , AWS_Subnet = AWS_Subnet
 }

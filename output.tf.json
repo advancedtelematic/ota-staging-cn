@@ -18,6 +18,25 @@
         "vpc": true
       }
     },
+    "aws_internet_gateway": {
+      "staging-cn": {
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      }
+    },
+    "aws_nat_gateway": {
+      "nat-a": {
+        "allocation_id": "${aws_eip.nat-a.id}",
+        "subnet_id": "${aws_subnet.public-cn-northwest-1a.id}"
+      },
+      "nat-b": {
+        "allocation_id": "${aws_eip.nat-b.id}",
+        "subnet_id": "${aws_subnet.public-cn-northwest-1b.id}"
+      },
+      "nat-c": {
+        "allocation_id": "${aws_eip.nat-c.id}",
+        "subnet_id": "${aws_subnet.public-cn-northwest-1c.id}"
+      }
+    },
     "aws_s3_bucket": {
       "ota-china-test-bucket": {
         "acl": "private",
