@@ -67,6 +67,32 @@
         "vpc_id": "${aws_vpc.staging-cn.id}"
       }
     },
+    "aws_route_table_association": {
+      "private-cn-northwest-1a": {
+        "route_table_id": "${aws_route_table.private-cn-northwest-1a.id}",
+        "subnet_id": "${aws_subnet.private-cn-northwest-1a.id}"
+      },
+      "private-cn-northwest-1b": {
+        "route_table_id": "${aws_route_table.private-cn-northwest-1b.id}",
+        "subnet_id": "${aws_subnet.private-cn-northwest-1b.id}"
+      },
+      "private-cn-northwest-1c": {
+        "route_table_id": "${aws_route_table.private-cn-northwest-1c.id}",
+        "subnet_id": "${aws_subnet.private-cn-northwest-1c.id}"
+      },
+      "public-cn-northwest-1a": {
+        "route_table_id": "${aws_route_table.public-cn-northwest-1.id}",
+        "subnet_id": "${aws_subnet.public-cn-northwest-1a.id}"
+      },
+      "public-cn-northwest-1b": {
+        "route_table_id": "${aws_route_table.public-cn-northwest-1.id}",
+        "subnet_id": "${aws_subnet.public-cn-northwest-1b.id}"
+      },
+      "public-cn-northwest-1c": {
+        "route_table_id": "${aws_route_table.public-cn-northwest-1.id}",
+        "subnet_id": "${aws_subnet.public-cn-northwest-1c.id}"
+      }
+    },
     "aws_s3_bucket": {
       "ota-china-test-bucket": {
         "acl": "private",

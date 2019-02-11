@@ -15,6 +15,14 @@ let AWS_Route_Table =
   }
 }
 
+let AWS_Route_Table_Association =
+{ mapKey : Text
+, mapValue :
+  { subnet_id : Text
+  , route_table_id : Text
+  }
+}
+
 let AWS_Subnet =
 { mapKey : Text
 , mapValue :
@@ -52,6 +60,7 @@ in
 , AWS_Eip = AWS_Eip
 , AWS_Internet_Gateway = AWS_Internet_Gateway
 , AWS_Route_Table = AWS_Route_Table
+, AWS_Route_Table_Association = AWS_Route_Table_Association
 , AWS_Nat_Gateway = AWS_Nat_Gateway
 , S3_Bucket = S3_Bucket
 , AWS_Subnet = AWS_Subnet

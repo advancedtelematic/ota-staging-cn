@@ -5,6 +5,8 @@ let region = "cn-northwest-1"
 let zones = ["a", "b", "c"]
 let environmentName = "staging-cn"
 
+let Visibility = < Public = "public" | Private = "private" >
+
 let provider : Types.Provider =
 { mapKey = "aws"
 , mapValue =
@@ -119,6 +121,27 @@ let createPrivateRouteTable =
 
 let privateRouteTables = map Text Types.AWS_Route_Table createPrivateRouteTable zones
 
+let createPrivateRouteTableAssociation =
+\(zone : Text) ->
+{ mapKey = "private-${region}${zone}"
+, mapValue =
+  { subnet_id = "\${aws_subnet.private-${region}${zone}.id}"
+  , route_table_id = "\${aws_route_table.private-${region}${zone}.id}"
+  }
+} : Types.AWS_Route_Table_Association
+
+let createPublicRouteTableAssociation =
+\(zone : Text) ->
+{ mapKey = "public-${region}${zone}"
+, mapValue =
+  { subnet_id = "\${aws_subnet.public-${region}${zone}.id}"
+  , route_table_id = "\${aws_route_table.public-${region}.id}"
+  }
+} : Types.AWS_Route_Table_Association
+
+let privateRouteTableAssociations = map Text Types.AWS_Route_Table_Association createPrivateRouteTableAssociation zones
+let publicRouteTableAssociations = map Text Types.AWS_Route_Table_Association createPublicRouteTableAssociation zones
+
 in
 { provider = [provider]
 , terraform =
@@ -137,6 +160,7 @@ in
   , aws_eip = eips
   , aws_nat_gateway = natGateways
   , aws_internet_gateway = [internetGateway]
-  , aws_route_table = [publicRouteTable] # privateRouteTables
+  , aws_route_table = privateRouteTables # [publicRouteTable]
+  , aws_route_table_association = privateRouteTableAssociations # publicRouteTableAssociations
   }
 }
