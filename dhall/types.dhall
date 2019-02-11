@@ -4,11 +4,14 @@ let AWS_Internet_Gateway =
 }
 
 let AWS_Route_Table =
-{ vpc_id : Text
-, route :
-  { cidr_block : Text
-  , gateway_id : Optional Text
-  , nat_gateway_id : Optional Text
+{ mapKey : Text
+, mapValue :
+  { vpc_id : Text
+  , route :
+    { cidr_block : Text
+    , gateway_id : Optional Text
+    , nat_gateway_id : Optional Text
+    }
   }
 }
 

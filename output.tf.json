@@ -37,6 +37,15 @@
         "subnet_id": "${aws_subnet.public-cn-northwest-1c.id}"
       }
     },
+    "aws_route_table": {
+      "public-cn-northwest-1": {
+        "route": {
+          "cidr_block": "0.0.0.0/0",
+          "gateway_id": "${aws_internet_gateway.staging-cn.id}"
+        },
+        "vpc_id": "${aws_vpc.staging-cn.id}"
+      }
+    },
     "aws_s3_bucket": {
       "ota-china-test-bucket": {
         "acl": "private",

@@ -32,7 +32,7 @@ let bucket : Types.S3_Bucket =
 }
 
 let internetGateway : Types.AWS_Internet_Gateway =
-{ mapKey = "staging-cn"
+{ mapKey = environmentName
 , mapValue = { vpc_id = "\${aws_vpc.${environmentName}.id}" }
 }
 
@@ -92,6 +92,18 @@ let createNatGateway =
 } : Types.AWS_Nat_Gateway
 let natGateways = map Text Types.AWS_Nat_Gateway createNatGateway zones
 
+let publicRouteTable : Types.AWS_Route_Table =
+{ mapKey = "public-${region}"
+, mapValue =
+  { vpc_id = "\${aws_vpc.${environmentName}.id}"
+  , route =
+    { cidr_block = "0.0.0.0/0"
+    , gateway_id = Some "\${aws_internet_gateway.${environmentName}.id}"
+    , nat_gateway_id = None Text
+    }
+  }
+}
+
 in
 { provider = [provider]
 , terraform =
@@ -110,5 +122,6 @@ in
   , aws_eip = eips
   , aws_nat_gateway = natGateways
   , aws_internet_gateway = [internetGateway]
+  , aws_route_table = [publicRouteTable]
   }
 }
