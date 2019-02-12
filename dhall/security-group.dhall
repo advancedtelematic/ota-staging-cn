@@ -12,6 +12,7 @@ in
 , mapValue :
   { name : Text
   , description : Text
+  , vpc_id : Text
   , ingress : Optional (List Ingress)
   , egress : Optional (List Egress)
   }

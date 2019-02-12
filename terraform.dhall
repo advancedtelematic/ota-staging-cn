@@ -78,7 +78,10 @@ let publicSubnets = map { zone : Text, range : Text } Types.AWS_Subnet createPub
 let createEip =
 \(zone : Text) ->
 { mapKey = "nat-${zone}"
-, mapValue = { vpc = True }
+, mapValue =
+  { vpc = True
+  , instance = None Text
+  }
 } : Types.AWS_Eip
 let eips = map Text Types.AWS_Eip createEip zones
 
@@ -140,6 +143,8 @@ let createPublicRouteTableAssociation =
 let privateRouteTableAssociations = map Text Types.AWS_Route_Table_Association createPrivateRouteTableAssociation zones
 let publicRouteTableAssociations = map Text Types.AWS_Route_Table_Association createPublicRouteTableAssociation zones
 
+let vpn = ./vpn.dhall
+
 in
 { provider = [provider]
 , terraform =
@@ -155,10 +160,11 @@ in
   { aws_vpc = [vpc]
   , aws_s3_bucket = [bucket]
   , aws_subnet = privateSubnets # publicSubnets
-  , aws_eip = eips
+  , aws_eip = eips # vpn.aws_eip
   , aws_nat_gateway = natGateways
   , aws_internet_gateway = [internetGateway]
   , aws_route_table = privateRouteTables # [publicRouteTable]
   , aws_route_table_association = privateRouteTableAssociations # publicRouteTableAssociations
+  , aws_instance = vpn.aws_instance
   } /\ ./security-groups.dhall
 }
