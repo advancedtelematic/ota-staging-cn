@@ -1,4 +1,6 @@
 let map = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d03b3ea760a96a8e03935f4baa64274e1/Prelude/List/map
+let concatMap = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d03b3ea760a96a8e03935f4baa64274e1/Prelude/List/concatMap
+
 let Types = ./dhall/types.dhall
 
 let region = "cn-northwest-1"
@@ -143,6 +145,38 @@ let createPublicRouteTableAssociation =
 let privateRouteTableAssociations = map Text Types.AWS_Route_Table_Association createPrivateRouteTableAssociation zones
 let publicRouteTableAssociations = map Text Types.AWS_Route_Table_Association createPublicRouteTableAssociation zones
 
+
+let inner = \(visibility : Text) -> map Text Text (\(zone : Text) -> "\${aws_subnet.${visibility}-${region}${zone}.id}") zones
+let subnetIds = concatMap Text Text inner ["public", "private"]
+
+let awsNetworkAcl =
+{ mapKey = "main"
+, mapValue =
+  { vpc_id = "\${aws_vpc.${environmentName}.id}"
+  , subnet_ids = subnetIds
+  , egress =
+    Some
+    [ { protocol = "-1"
+      , rule_no = 100
+      , action = "allow"
+      , cidr_block = "0.0.0.0/0"
+      , from_port = 0
+      , to_port = 0
+      }
+    ]
+  , ingress =
+    Some
+    [ { protocol = "-1"
+      , rule_no = 100
+      , action = "allow"
+      , cidr_block = "0.0.0.0/0"
+      , from_port = 0
+      , to_port = 0
+      }
+    ]
+  }
+} : Types.AWS_Network_Acl
+
 let vpn = ./vpn.dhall
 
 in
@@ -166,5 +200,6 @@ in
   , aws_route_table = privateRouteTables # [publicRouteTable]
   , aws_route_table_association = privateRouteTableAssociations # publicRouteTableAssociations
   , aws_instance = vpn.aws_instance
+  , aws_network_acl = [awsNetworkAcl]
   } /\ ./security-groups.dhall
 }

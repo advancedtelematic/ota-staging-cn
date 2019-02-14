@@ -35,7 +35,7 @@
         },
         "subnet_id": "${aws_subnet.public-cn-northwest-1a.id}",
         "tags": {
-          "name": "vpn"
+          "Name": "vpn"
         },
         "vpc_security_group_ids": [
           "${aws_security_group.vpn.id}"
@@ -59,6 +59,39 @@
       "nat-gw-c": {
         "allocation_id": "${aws_eip.nat-c.id}",
         "subnet_id": "${aws_subnet.public-cn-northwest-1c.id}"
+      }
+    },
+    "aws_network_acl": {
+      "main": {
+        "egress": [
+          {
+            "action": "allow",
+            "cidr_block": "0.0.0.0/0",
+            "from_port": 0,
+            "protocol": "-1",
+            "rule_no": 100,
+            "to_port": 0
+          }
+        ],
+        "ingress": [
+          {
+            "action": "allow",
+            "cidr_block": "0.0.0.0/0",
+            "from_port": 0,
+            "protocol": "-1",
+            "rule_no": 100,
+            "to_port": 0
+          }
+        ],
+        "subnet_ids": [
+          "${aws_subnet.public-cn-northwest-1a.id}",
+          "${aws_subnet.public-cn-northwest-1b.id}",
+          "${aws_subnet.public-cn-northwest-1c.id}",
+          "${aws_subnet.private-cn-northwest-1a.id}",
+          "${aws_subnet.private-cn-northwest-1b.id}",
+          "${aws_subnet.private-cn-northwest-1c.id}"
+        ],
+        "vpc_id": "${aws_vpc.staging-cn.id}"
       }
     },
     "aws_route_table": {
