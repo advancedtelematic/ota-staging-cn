@@ -9,3 +9,6 @@ print-terraform-json:
 
 generate-terraform-json: print-terraform-json
 	cat ./terraform.dhall | $(DOCKER_RUN) | tr -d '\r' > output.tf.json
+
+test:
+	cat ./vpc.dhall | $(DOCKER_RUN) | tr -d '\r'
