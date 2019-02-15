@@ -1,8 +1,4 @@
-let Tag =
-{ mapKey : Text
-, mapValue : Text }
-
-let Tags = List Tag
+let Tags = ./tags.dhall
 
 let Block_Device =
 { volume_type : Text
@@ -24,4 +20,5 @@ let AWS_Instance =
   }
 }
 
-in AWS_Instance
+in
+{ AWS_Instance = AWS_Instance }

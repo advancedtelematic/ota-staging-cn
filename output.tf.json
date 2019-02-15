@@ -293,31 +293,49 @@
       "private-cn-northwest-1a": {
         "availability_zone": "cn-northwest-1a",
         "cidr_block": "10.100.1.0/24",
+        "tags": {
+          "Name": "private-cn-northwest-1a"
+        },
         "vpc_id": "${aws_vpc.staging-cn.id}"
       },
       "private-cn-northwest-1b": {
         "availability_zone": "cn-northwest-1b",
         "cidr_block": "10.100.3.0/24",
+        "tags": {
+          "Name": "private-cn-northwest-1b"
+        },
         "vpc_id": "${aws_vpc.staging-cn.id}"
       },
       "private-cn-northwest-1c": {
         "availability_zone": "cn-northwest-1c",
         "cidr_block": "10.100.5.0/24",
+        "tags": {
+          "Name": "private-cn-northwest-1c"
+        },
         "vpc_id": "${aws_vpc.staging-cn.id}"
       },
       "public-cn-northwest-1a": {
         "availability_zone": "cn-northwest-1a",
         "cidr_block": "10.100.0.0/24",
+        "tags": {
+          "Name": "public-cn-northwest-1a"
+        },
         "vpc_id": "${aws_vpc.staging-cn.id}"
       },
       "public-cn-northwest-1b": {
         "availability_zone": "cn-northwest-1b",
         "cidr_block": "10.100.2.0/24",
+        "tags": {
+          "Name": "public-cn-northwest-1b"
+        },
         "vpc_id": "${aws_vpc.staging-cn.id}"
       },
       "public-cn-northwest-1c": {
         "availability_zone": "cn-northwest-1c",
         "cidr_block": "10.100.4.0/24",
+        "tags": {
+          "Name": "public-cn-northwest-1c"
+        },
         "vpc_id": "${aws_vpc.staging-cn.id}"
       }
     },

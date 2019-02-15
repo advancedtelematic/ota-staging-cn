@@ -3,6 +3,14 @@ let concatMap = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d
 
 let Types = ./dhall/types.dhall
 
+let nameTag =
+\(name : Text) ->
+Some
+[ { mapKey = "Name"
+  , mapValue = name
+  }
+]
+
 let region = "cn-northwest-1"
 let zones = ["a", "b", "c"]
 let environmentName = "staging-cn"
@@ -69,6 +77,7 @@ let createSubnet =
   { vpc_id = "\${aws_vpc.${environmentName}.id}"
   , cidr_block = "10.100.${subnet.range}.0/24"
   , availability_zone = "${region}${subnet.zone}"
+  , tags = nameTag "${name}-${region}${subnet.zone}"
   }
 } : Types.AWS_Subnet
 

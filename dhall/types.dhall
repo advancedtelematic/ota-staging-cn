@@ -1,3 +1,9 @@
+let Tags = ./tags.dhall
+
+let hasTags =
+{ tags : Optional Tags
+}
+
 let AWS_Internet_Gateway =
 { mapKey : Text
 , mapValue : { vpc_id : Text }
@@ -29,7 +35,7 @@ let AWS_Subnet =
   { vpc_id : Text
   , cidr_block : Text
   , availability_zone : Text
-  }
+  } //\\ hasTags
 }
 
 let AWS_Eip =
@@ -57,6 +63,7 @@ let S3_Bucket =
 }
 
 let security = ./security-group.dhall
+let ec2 = ./ec2.dhall
 
 in
 { Provider = ./provider.dhall
@@ -68,7 +75,8 @@ in
 , AWS_Nat_Gateway = AWS_Nat_Gateway
 , AWS_Security_Group = security.AWS_Security_Group
 , AWS_Network_Acl = security.AWS_Network_Acl
-, AWS_Instance = ./ec2.dhall
+, AWS_Instance = ec2.AWS_Instance
+, Tags = Tags
 , S3_Bucket = S3_Bucket
 , AWS_Subnet = AWS_Subnet
 }
