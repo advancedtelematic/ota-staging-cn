@@ -187,6 +187,7 @@ let awsNetworkAcl =
 } : Types.AWS_Network_Acl
 
 let vpn = ./vpn.dhall
+let hats = ./hats.dhall
 
 in
 { provider = [provider]
@@ -208,7 +209,7 @@ in
   , aws_internet_gateway = [internetGateway]
   , aws_route_table = privateRouteTables # [publicRouteTable]
   , aws_route_table_association = privateRouteTableAssociations # publicRouteTableAssociations
-  , aws_instance = vpn.aws_instance
+  , aws_instance = vpn.aws_instance # hats.aws_instance
   , aws_network_acl = [awsNetworkAcl]
   } /\ ./security-groups.dhall
 }

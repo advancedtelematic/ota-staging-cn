@@ -1,3 +1,15 @@
+let Provisioner =
+List
+{ mapKey : Text
+, mapValue :
+  { connection :
+    { user : Text
+    , private_key : Text
+    }
+  , inline : List Text
+  }
+}
+
 let Tags = ./tags.dhall
 
 let Block_Device =
@@ -17,8 +29,10 @@ let AWS_Instance =
   , disable_api_termination : Bool
   , root_block_device : Block_Device
   , tags : Optional Tags
+  , provisioner : Optional Provisioner
   }
 }
 
 in
-{ AWS_Instance = AWS_Instance }
+{ AWS_Instance = AWS_Instance
+, Provisioner = Provisioner }

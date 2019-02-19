@@ -23,6 +23,44 @@
       }
     },
     "aws_instance": {
+      "cork": {
+        "ami": "ami-02f30efe6746d9afd",
+        "availability_zone": "cn-northwest-1a",
+        "disable_api_termination": false,
+        "instance_type": "m4.2xlarge",
+        "key_name": "staging-cn",
+        "provisioner": {
+          "remote-exec": {
+            "connection": {
+              "private_key": "${file(\"./keys/staging-cn.pem\")}",
+              "user": "ubuntu"
+            },
+            "inline": [
+              "docker pull weaveworks/weave-npc:2.5.1",
+              "docker pull weaveworks/weave-kube:2.5.1",
+              "sudo bash -c 'swapoff -a && kubeadm init --ignore-preflight-errors=all --config kubernetes-for-china/init.yml'",
+              "sleep 60",
+              "sudo bash -c 'cat /etc/kubernetes/admin.conf'",
+              "sudo bash -c 'KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f /etc/kubernetes/manifests/weave.yaml'",
+              "sleep 30",
+              "sudo bash -c 'KUBECONFIG=/etc/kubernetes/admin.conf kubectl taint nodes --all node-role.kubernetes.io/master-'",
+              "sudo bash -c 'KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f /etc/kubernetes/manifests/nginx-ingress-controller.yaml'",
+              "sudo bash -c 'KUBECONFIG=/etc/kubernetes/admin.conf helm init --override \"spec.template.spec.containers[0].image=registry.aliyuncs.com/google_containers/tiller:v2.12.2\" --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts'"
+            ]
+          }
+        },
+        "root_block_device": {
+          "volume_size": 80,
+          "volume_type": "gp2"
+        },
+        "subnet_id": "${aws_subnet.private-cn-northwest-1a.id}",
+        "tags": {
+          "Name": "cork"
+        },
+        "vpc_security_group_ids": [
+          "${aws_security_group.private.id}"
+        ]
+      },
       "vpn": {
         "ami": "ami-0b0c78f9d8233d1da",
         "availability_zone": "cn-northwest-1a",

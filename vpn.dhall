@@ -21,6 +21,7 @@ let vpnInstance =
       , mapValue = "vpn"
       }
     ]
+  , provisioner = None Types.Provisioner
   }
 } : Types.AWS_Instance
 

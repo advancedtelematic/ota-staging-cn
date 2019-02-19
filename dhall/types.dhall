@@ -62,9 +62,6 @@ let S3_Bucket =
   }
 }
 
-let security = ./security-group.dhall
-let ec2 = ./ec2.dhall
-
 in
 { Provider = ./provider.dhall
 , VPC = ./vpc.dhall
@@ -73,10 +70,8 @@ in
 , AWS_Route_Table = AWS_Route_Table
 , AWS_Route_Table_Association = AWS_Route_Table_Association
 , AWS_Nat_Gateway = AWS_Nat_Gateway
-, AWS_Security_Group = security.AWS_Security_Group
-, AWS_Network_Acl = security.AWS_Network_Acl
-, AWS_Instance = ec2.AWS_Instance
 , Tags = Tags
 , S3_Bucket = S3_Bucket
 , AWS_Subnet = AWS_Subnet
-}
+} /\ ./ec2.dhall
+  /\ ./security-group.dhall
