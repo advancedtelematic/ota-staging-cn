@@ -4,6 +4,9 @@ DOCKER_RUN := \
 DOCKER_RUN_DEBUG := \
   ${DOCKER_RUN} --explain
 
+test:
+	cat ./output.dhall | $(DOCKER_RUN_DEBUG)
+
 print-terraform-json:
 	cat ./terraform.dhall | $(DOCKER_RUN)
 
