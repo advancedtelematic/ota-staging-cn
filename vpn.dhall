@@ -1,5 +1,6 @@
 let common = ./common.dhall
 let Types = ./dhall/types.dhall
+let defaults = ./dhall/defaults.dhall
 
 let vpnInstance =
 { mapKey = "vpn"
@@ -34,5 +35,6 @@ let vpnEip =
 }
 
 in
-{ aws_instance = [vpnInstance]
-, aws_eip = [vpnEip] }
+defaults //
+{ aws_instance = Some [vpnInstance]
+, aws_eip = Some [vpnEip] }

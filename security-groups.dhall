@@ -1,5 +1,6 @@
 let Types = ./dhall/types.dhall
 let common = ./common.dhall
+let defaults = ./dhall/defaults.dhall
 
 let vpn =
 { mapKey = "vpn"
@@ -112,4 +113,5 @@ let publicSecurityGroup =
 }
 
 in
-{ aws_security_group = [ vpn, privateSecurityGroup, publicSecurityGroup ] : List Types.AWS_Security_Group }
+defaults //
+{ aws_security_group = Some [ vpn, privateSecurityGroup, publicSecurityGroup ] }

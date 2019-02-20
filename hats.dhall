@@ -1,5 +1,6 @@
 let common = ./common.dhall
 let Types = ./dhall/types.dhall
+let defaults = ./dhall/defaults.dhall
 
 let kubeconfig = "KUBECONFIG=/etc/kubernetes/admin.conf"
 
@@ -56,4 +57,5 @@ let hats =
 [ hatInstance "cork" ]
 
 in
-{ aws_instance = hats }
+defaults //
+{ aws_instance = Some hats }

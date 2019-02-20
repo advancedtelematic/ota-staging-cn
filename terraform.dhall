@@ -1,5 +1,6 @@
 let map = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d03b3ea760a96a8e03935f4baa64274e1/Prelude/List/map
 let concatMap = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d03b3ea760a96a8e03935f4baa64274e1/Prelude/List/concatMap
+let defaults = ./dhall/defaults.dhall
 
 let Types = ./dhall/types.dhall
 
@@ -14,15 +15,6 @@ Some
 let region = "cn-northwest-1"
 let zones = ["a", "b", "c"]
 let environmentName = "staging-cn"
-
-let provider : Types.Provider =
-{ mapKey = "aws"
-, mapValue =
-  { access_key = "\${var.aws_access_key}"
-  , secret_key = "\${var.aws_secret_key}"
-  , region     = region
-  }
-}
 
 let vpc : Types.VPC =
 { mapKey = environmentName
@@ -186,30 +178,15 @@ let awsNetworkAcl =
   }
 } : Types.AWS_Network_Acl
 
-let vpn = ./vpn.dhall
-let hats = ./hats.dhall
-
 in
-{ provider = [provider]
-, terraform =
-  { backend =
-    { s3 =
-      { bucket = "ota-china-state-store"
-      , key = "terraform/"
-      , region = "cn-northwest-1"
-      }
-    }
-  }
-, resource =
-  { aws_vpc = [vpc]
-  , aws_s3_bucket = [bucket]
-  , aws_subnet = privateSubnets # publicSubnets
-  , aws_eip = eips # vpn.aws_eip
-  , aws_nat_gateway = natGateways
-  , aws_internet_gateway = [internetGateway]
-  , aws_route_table = privateRouteTables # [publicRouteTable]
-  , aws_route_table_association = privateRouteTableAssociations # publicRouteTableAssociations
-  , aws_instance = vpn.aws_instance # hats.aws_instance
-  , aws_network_acl = [awsNetworkAcl]
-  } /\ ./security-groups.dhall
+defaults //
+{ aws_vpc = Some [vpc]
+, aws_s3_bucket = Some [bucket]
+, aws_subnet = Some (privateSubnets # publicSubnets)
+, aws_eip = Some eips
+, aws_nat_gateway = Some natGateways
+, aws_internet_gateway = Some [internetGateway]
+, aws_route_table = Some (privateRouteTables # [publicRouteTable])
+, aws_route_table_association = Some (privateRouteTableAssociations # publicRouteTableAssociations)
+, aws_network_acl = Some [awsNetworkAcl]
 }
