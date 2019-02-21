@@ -32,7 +32,7 @@ let hatInstance =
 \(name : Text) ->
 { mapKey = name
 , mapValue =
-  { ami = "ami-02f30efe6746d9afd"
+  { ami = "ami-011faa69cfe440cf5"
   , availability_zone = "${common.region}a"
   , instance_type = "m4.2xlarge"
   , key_name = "${common.environmentName}"
