@@ -24,6 +24,7 @@ let mergeOptionalLists =
 let concatResources =
 \(x : Resources) -> \(y : Resources) ->
 { aws_eip = (mergeOptionalLists Types.AWS_Eip x.aws_eip y.aws_eip)
+, aws_elb = (mergeOptionalLists Types.AWS_ELB x.aws_elb y.aws_elb)
 , aws_instance = (mergeOptionalLists Types.AWS_Instance x.aws_instance y.aws_instance)
 , aws_internet_gateway = (mergeOptionalLists Types.AWS_Internet_Gateway x.aws_internet_gateway y.aws_internet_gateway)
 , aws_nat_gateway = (mergeOptionalLists Types.AWS_Nat_Gateway x.aws_nat_gateway y.aws_nat_gateway)

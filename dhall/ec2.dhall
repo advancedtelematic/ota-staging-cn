@@ -33,6 +33,54 @@ let AWS_Instance =
   }
 }
 
+let ElbAccessLogs =
+{ bucket : Text
+, bucket_prefix : Optional Text
+, interval : Optional Natural
+, enabled : Optional Bool
+}
+
+let ElbListener =
+{ instance_port : Natural
+, instance_protocol : Text
+, lb_port : Natural
+, lb_protocol : Text
+, ssl_certificate_id : Optional Text
+}
+
+let ElbHealthCheck =
+{ healthy_threshold : Natural
+, unhealthy_threshold : Natural
+, target : Text
+, interval : Natural
+, timeout : Natural
+}
+
+let AWS_ELB =
+{ mapKey : Text
+, mapValue :
+  { name : Optional Text
+  , name_prefix : Optional Text
+  , access_logs : Optional ElbAccessLogs
+  , availability_zones : Optional (List Text)
+  , security_groups : Optional (List Text)
+  , subnets : List Text
+  , instances : Optional (List Text)
+  , internal : Optional Bool
+  , listener : List ElbListener
+  , health_check : Optional ElbHealthCheck
+  , cross_zone_load_balancing : Optional Bool
+  , idle_timeout : Optional Natural
+  , connection_draining : Optional Bool
+  , connection_draining_timeout : Optional Natural
+  , tags : Optional Tags
+  }
+}
+
 in
 { AWS_Instance = AWS_Instance
-, Provisioner = Provisioner }
+, Provisioner = Provisioner
+, AWS_ELB = AWS_ELB
+, ElbAccessLogs = ElbAccessLogs
+, ElbHealthCheck = ElbHealthCheck
+}

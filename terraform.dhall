@@ -9,10 +9,10 @@ let functions = ./dhall/functions.dhall
 let common = ./common.dhall
 
 let resourceFiles =
-[ ./hats.dhall
+[ ./vpc.dhall
 , ./vpn.dhall
 , ./security-groups.dhall
-, ./vpc.dhall
+, ./hats.dhall
 ]
 
 let resources = listFold Resources resourceFiles Resources functions.concatResources defaults
