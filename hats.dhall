@@ -1,6 +1,9 @@
+let map = https://raw.githubusercontent.com/dhall-lang/dhall-lang/0a7f596d03b3ea760a96a8e03935f4baa64274e1/Prelude/List/map
+
 let common = ./common.dhall
 let Types = ./dhall/types.dhall
 let defaults = ./dhall/defaults.dhall
+let resourceDefaults = ./dhall/resourceDefaults.dhall
 
 let kubeconfig = "KUBECONFIG=/etc/kubernetes/admin.conf"
 
@@ -53,9 +56,49 @@ let hatInstance =
   }
 } : Types.AWS_Instance
 
-let hats =
-[ hatInstance "cork" ]
+let hatElb =
+\(name : Text) ->
+{ mapKey = name
+, mapValue =
+  resourceDefaults.awsElbDefault //
+  { name = Some name
+  , instances =
+    Some
+    ["\${aws_instance.${name}.id}"]
+  , subnets =
+    [ "\${aws_subnet.public-cn-northwest-1a.id}"
+    , "\${aws_subnet.public-cn-northwest-1b.id}"
+    , "\${aws_subnet.public-cn-northwest-1c.id}"
+    ]
+  , cross_zone_load_balancing = Some True
+  , security_groups =
+    Some
+    ["\${aws_security_group.public.id}"]
+  , listener =
+    [ { instance_port = 80
+      , instance_protocol = "http"
+      , lb_port = 80
+      , lb_protocol = "http"
+      , ssl_certificate_id = None Text
+      }
+    , { instance_port      = 8000
+      , instance_protocol  = "tcp"
+      , lb_port            = 8000
+      , lb_protocol        = "tcp"
+      , ssl_certificate_id = None Text
+      }
+    ]
+  }
+} : Types.AWS_ELB
+
+let hatNames =
+[ "cork" ]
+
+let makeHats =
+\(names : List Text) ->
+{ aws_instance = Some (map Text Types.AWS_Instance hatInstance names)
+, aws_elb = Some (map Text Types.AWS_ELB hatElb names)
+}
 
 in
-defaults //
-{ aws_instance = Some hats }
+(defaults // makeHats hatNames)
