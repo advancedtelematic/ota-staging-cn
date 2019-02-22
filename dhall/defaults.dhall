@@ -3,6 +3,7 @@ let Types = ./types.dhall
 
 let defaults =
 { aws_eip = None (List Types.AWS_Eip)
+, aws_elb = None (List Types.AWS_ELB)
 , aws_instance = None (List Types.AWS_Instance)
 , aws_internet_gateway = None (List Types.AWS_Internet_Gateway)
 , aws_nat_gateway = None (List Types.AWS_Nat_Gateway)

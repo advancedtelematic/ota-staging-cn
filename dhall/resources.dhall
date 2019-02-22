@@ -2,6 +2,7 @@ let Types = ./types.dhall
 
 let Resources =
 { aws_eip : Optional (List Types.AWS_Eip)
+, aws_elb : Optional (List Types.AWS_ELB)
 , aws_instance : Optional (List Types.AWS_Instance)
 , aws_internet_gateway : Optional (List Types.AWS_Internet_Gateway)
 , aws_nat_gateway : Optional (List Types.AWS_Nat_Gateway)
